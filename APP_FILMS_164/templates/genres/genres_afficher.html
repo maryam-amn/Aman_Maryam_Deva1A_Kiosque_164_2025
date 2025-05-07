@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} Afficher Contact {% endblock %}
+{% block title %}  Produit {% endblock %}
 {% block body %}
 <div class="container">
 	<div class="row">
@@ -15,21 +15,17 @@
                             Id
                         </th>
                         <th class="align-middle">
-							Stocks
-                        </th>
-                        <th class="align-middle">
                             Produit
                         </th>
                         <th class="align-middle">
-							Catégories
+							Stock actuel
+                        </th>
+                         <th class="align-middle">
+							Catégorie
                         </th>
 
-                        <th class="align-middle">
 
-                        </th>
-                        <th class="align-middle">
 
-                        </th>
                     </tr>
                 </thead>
             {% endif %}
@@ -40,11 +36,12 @@
 						<td class="align-middle">
 							{{ row.id_produit }}
 						</td>
-                        <td class="align-middle">
-							{{ row.stock_actuel }}
-						</td>
 						<td class="align-middle">
 							{{ row.nom_produit }}
+						</td>
+
+                        <td class="align-middle">
+							{{ row.stock_actuel }}
 						</td>
 						<td class="align-middle">
 							{{ row.categorie_produit }}

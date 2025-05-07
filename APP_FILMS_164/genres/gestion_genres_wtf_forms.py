@@ -8,7 +8,9 @@ from wtforms import StringField, DateField
 from wtforms import SubmitField
 from wtforms.validators import Length, InputRequired, DataRequired
 from wtforms.validators import Regexp
-
+from flask_wtf import FlaskForm
+from wtforms import StringField, IntegerField, FloatField, SubmitField
+from wtforms.validators import DataRequired, Length, NumberRange
 
 class FormWTFAjouterGenres(FlaskForm):
     """
