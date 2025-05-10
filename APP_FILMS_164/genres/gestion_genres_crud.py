@@ -167,8 +167,12 @@ def genre_update_wtf():
                                           }
             print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
 
-            str_sql_update_intitulegenre = """UPDATE t_produit SET intitule_genre = %(value_nom_produit)s, 
-            date_ins_genre = %(value_date_genre_essai)s WHERE id_produit = %(value_id_produit)s """
+            str_sql_update_intitulegenre = """ UPDATE t_produit
+    SET nom_produit = %(value_nom_produit)s,
+        stock_actuel = %(value_stock_actuel)s,
+        prix_produit = %(value_prix_produit)s,
+        categorie_produit = %(value_categorie_produit)s
+    WHERE id_produit = %(value_id_produit)s"""
             with DBconnection() as mconn_bd:
                 mconn_bd.execute(str_sql_update_intitulegenre, valeur_update_dictionnaire)
 
@@ -180,7 +184,7 @@ def genre_update_wtf():
             return redirect(url_for('genres_afficher', order_by="ASC", id_genre_sel=id_genre_update))
         elif request.method == "GET":
             # Opération sur la BD pour récupérer "id_genre" et "intitule_genre" de la "t_genre"
-            str_sql_id_genre = "SELECT * FROM t_produit " \
+            str_sql_id_genre = "SELECT id_produit, nom_produit FROM t_produit " \
                                "WHERE id_produit = %(value_id_produit)s"
             valeur_select_dictionnaire = {"value_id_genre": id_genre_update}
             with DBconnection() as mybd_conn:
