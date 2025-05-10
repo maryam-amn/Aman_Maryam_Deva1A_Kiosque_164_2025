@@ -172,7 +172,7 @@ def genre_update_wtf():
         stock_actuel = %(value_stock_actuel)s,
         prix_produit = %(value_prix_produit)s,
         categorie_produit = %(value_categorie_produit)s
-    WHERE id_produit = %(value_id_produit)s"""
+WHERE id_produit = %(value_id_produit)s"""
             with DBconnection() as mconn_bd:
                 mconn_bd.execute(str_sql_update_intitulegenre, valeur_update_dictionnaire)
 
