@@ -252,7 +252,7 @@ def genre_delete_wtf():
                 valeur_delete_dictionnaire = {"value_id_genre": id_genre_delete}
                 print("valeur_delete_dictionnaire ", valeur_delete_dictionnaire)
 
-                str_sql_delete_films_genre = """DELETE FROM t_produit WHERE id_produit = %(value_id_produit)s"""
+                str_sql_delete_films_genre = """DELETE FROM t_fournisseur_produit WHERE fk_fournisseur = %(value_id_produit)s"""
                 str_sql_delete_idgenre = """DELETE FROM t_produit WHERE id_produit = %(value_id_produit)s"""
                 # Manière brutale d'effacer d'abord la "fk_genre", même si elle n'existe pas dans la "t_genre_film"
                 # Ensuite on peut effacer le genre vu qu'il n'est plus "lié" (INNODB) dans la "t_genre_film"
@@ -271,9 +271,13 @@ def genre_delete_wtf():
             print(id_genre_delete, type(id_genre_delete))
 
             # Requête qui affiche tous les films_genres qui ont le genre que l'utilisateur veut effacer
-            str_sql_genres_films_delete = """SELECT id_produit, nom_produit, stock_actuel, prix_produit, categorie_produit
-                                            FROM t_produit WHERE categorie_produit = %(value_categorie_produit)s
-                                                """""
+            str_sql_genres_films_delete = """SELECT *
+                        FROM t_fournisseur_produit
+                        INNER JOIN t_fournisseur ON t_fournisseur_produit.fk_fournisseur = t_fournisseur.id_fournisseur
+                        INNER JOIN t_produit ON t_fournisseur_produit.fk_produit = t_produit.id_produit
+                        WHERE fk_produit = %(value_id_produit)s;
+                        """
+
             with DBconnection() as mydb_conn:
                 mydb_conn.execute(str_sql_genres_films_delete, valeur_select_dictionnaire)
                 data_films_attribue_genre_delete = mydb_conn.fetchall()
