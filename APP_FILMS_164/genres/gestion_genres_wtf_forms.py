@@ -31,18 +31,56 @@ class FormWTFUpdateGenre(FlaskForm):
         Dans le formulaire "genre_update_wtf.html" on impose que le champ soit rempli.
         Définition d'un "bouton" submit avec un libellé personnalisé.
     """
-    nom_genre_update_regexp = "^([A-Z]|[a-zÀ-ÖØ-öø-ÿ])[A-Za-zÀ-ÖØ-öø-ÿ]*['\- ]?[A-Za-zÀ-ÖØ-öø-ÿ]+$"
-    nom_genre_update_wtf = StringField("Clavioter le genre ", validators=[Length(min=2, max=20, message="min 2 max 20"),
-                                                                          Regexp(nom_genre_update_regexp,
-                                                                                 message="Pas de chiffres, de "
-                                                                                         "caractères "
-                                                                                         "spéciaux, "
-                                                                                         "d'espace à double, de double "
-                                                                                         "apostrophe, de double trait "
-                                                                                         "union")
-                                                                          ])
-    date_genre_wtf_essai = DateField("Essai date", validators=[InputRequired("Date obligatoire"),
-                                                               DataRequired("Date non valide")])
+    # Regex pour chaque champ
+    nom_produit_update_regexp = r'^[A-Za-zÀ-ÿ\s\'-]+$'
+    stock_actuel_update_regexp = r'^\d+$'
+    prix_produit_update_regexp = r'^\d+([.,]\d{1,2})?$'
+    categorie_produit_update_regexp = r'^[A-Za-zÀ-ÿ\s\'-]+$'
+    # Champ nom du produit
+    nom_produit_update_wtf = StringField(
+        "Ecrire le produit",
+        validators=[
+            Length(min=2, max=20, message="min 2 max 20"),
+            Regexp(
+                nom_produit_update_regexp,
+                message="Pas de chiffres, de caractères spéciaux, d'espace à double, de double apostrophe, de double trait union"
+            )
+        ]
+    )
+    categorie_produit_update_wtf = StringField(
+        "Ecrire le produit",
+        validators=[
+            Length(min=2, max=20, message="min 2 max 20"),
+            Regexp(
+                categorie_produit_update_regexp,
+                message="Pas de chiffres, de caractères spéciaux, d'espace à double, de double apostrophe, de double trait union"
+            )
+        ]
+    )
+    # Champ stock actuel
+    stock_actuel_update_wtf = StringField(
+        "Ecrire le stock",
+        validators=[
+            Length(min=1, max=20, message="min 1 max 20"),
+            Regexp(
+                stock_actuel_update_regexp,
+                message="Le stock doit être un nombre entier"
+            )
+        ]
+    )
+
+    # Champ prix du produit
+    prix_produit_update_wtf = StringField(
+        "Ecrire le prix",
+        validators=[
+            Length(min=1, max=20, message="min 1 max 20"),
+            Regexp(
+                prix_produit_update_regexp,
+                message="Le prix doit être un nombre (ex: 10 ou 10.99)"
+            )
+        ]
+    )
+
     submit = SubmitField("Update genre")
 
 
