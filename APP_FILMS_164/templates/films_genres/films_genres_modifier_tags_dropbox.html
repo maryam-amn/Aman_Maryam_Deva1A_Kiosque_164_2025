@@ -50,17 +50,10 @@
                                 Titre
                             </th>
                             <th class="">
-                                Durée
+                                Adresse
                             </th>
-                            <th class="">
-                                Date sortie
-                            </th>
-                            <th class="">
-                                Description
-                            </th>
-                            <th class="">
-                                Affiche
-                            </th>
+
+
                         </tr>
                     </thead>
             {% endif %}
@@ -69,13 +62,13 @@
 				<tbody>
 					<tr>
 						<td class="align-middle">
-							{{ row.id_film }}
+							{{ row.id_fournisseur }}
 						</td>
 						<td class="align-middle">
-							{{ row.nom_film }}
+							{{ row.nom_entreprise }}
 						</td>
 						<td class="align-middle">
-							{{ row.duree_film|default("", True) }}
+							{{ row.adresse_entreprise|default("", True) }}
 						</td>
 						<td class="align-middle">
 							{{ row.date_sortie_film|default("", True) }}
@@ -83,9 +76,7 @@
 						<td class="align-middle">
 							{{ row.description_film|default("", True) }}
 						</td>
-						<td class="align-middle">
-                            <img class="img" src={{ row.cover_link_film|default(None, True) }} style="border: 0;display:block; width:150px; max-height:auto;" alt = "image masquée FFP67 (in COVID-29 Memory) (absente) mod 164">
-						</td>
+
 					</tr>
 				</tbody>
             {% else %}
@@ -110,13 +101,15 @@
           <div class="p-3">
             <form id="form_tags_select_confirm" action="{{ url_for('update_genre_film_selected') }}" method="POST">
                 <div class="qtagselect isw360">
+                <p>Produit Fournies</p>
                     <select id="OM_JTSD" name="name_select_tags" class="qtagselect__select" multiple>
+
                         {% for row in data_genres_non_attribues %}
-                            <option value="{{ row.id_genre }}" name="name_tags_non_attribues_html" class="isblue" >{{ row.intitule_genre }}</option>
+                            <option value="{{ row.id_produit }}" name="name_tags_non_attribues_html" class="isblue" >{{ row.nom_produit }}</option>
                         {% endfor %}
 
                         {% for row in data_genres_attribues %}
-                            <option value="{{ row.id_genre }}" name="name_tags_attribues_html" class="ispurple" selected>{{ row.intitule_genre }}</option>
+                            <option value="{{ row.id_produit }}" name="name_tags_attribues_html" class="ispurple" selected>{{ row.nom_produit }}</option>
                         {% endfor %}
                     </select>
                 </div>

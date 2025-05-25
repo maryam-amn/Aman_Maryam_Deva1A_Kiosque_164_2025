@@ -101,19 +101,29 @@ def genres_ajouter_wtf():
     if request.method == "POST":
         try:
             if form.validate_on_submit():
-                name_genre_wtf = form.nom_genre_wtf.data
-                name_genre = name_genre_wtf.lower()
-                valeurs_insertion_dictionnaire = {"value_intitule_genre": name_genre}
+                nom_produit = form.nom_produit_ajouter_wtf.data
+                categorie_produit = form.categorie_produit_ajouter_wtf.data
+                stock_actuel = form.stock_actuel_ajouter_wtf.data
+                prix_produit = form.prix_produit_ajouter_wtf.data
+
+                valeurs_insertion_dictionnaire = {
+                    "value_nom_produit": nom_produit,
+                    "value_categorie_produit": categorie_produit,
+                    "value_stock_actuel": stock_actuel,
+                    "value_prix_produit": prix_produit
+                }
                 print("valeurs_insertion_dictionnaire ", valeurs_insertion_dictionnaire)
-            # INSERT INTO `t_personnne` (`id_personne`, `nom_per`, `prenom_per`, `date_de_nais_per`) VALUES ('', NULL, 'ff', NULL)
-                strsql_insert_genre = """INSERT INTO t_produit (id_produit,nom_produit) VALUES (NULL,%(value_intitule_genre)s) """
+
+                strsql_insert_genre = """
+                    INSERT INTO t_produit (nom_produit, categorie_produit, stock_actuel, prix_produit)
+                    VALUES (%(value_nom_produit)s, %(value_categorie_produit)s, %(value_stock_actuel)s, %(value_prix_produit)s)
+                """
                 with DBconnection() as mconn_bd:
                     mconn_bd.execute(strsql_insert_genre, valeurs_insertion_dictionnaire)
 
                 flash(f"Données insérées !!", "success")
                 print(f"Données insérées !!")
 
-                # Pour afficher et constater l'insertion de la valeur, on affiche en ordre inverse. (DESC)
                 return redirect(url_for('genres_afficher', order_by='DESC', id_genre_sel=0))
 
         except Exception as Exception_genres_ajouter_wtf:
@@ -146,69 +156,47 @@ def genres_ajouter_wtf():
 
 @app.route("/genre_update", methods=['GET', 'POST'])
 def genre_update_wtf():
-    # L'utilisateur vient de cliquer sur le bouton "EDIT". Récupère la valeur de "id_genre"
-    id_produit_update = request.values['id_produit_btn_edit_html']
-
-    # Objet formulaire pour l'UPDATE
     form_update = FormWTFUpdateGenre()
-    try:
-        # 2023.05.14 OM S'il y a des listes déroulantes dans le formulaire
-        # La validation pose quelques problèmes
-        if request.method == "POST" and form_update.submit.data:
-            # Récupèrer la valeur du champ depuis "genre_update_wtf.html" après avoir cliqué sur "SUBMIT".
-            # Puis la convertir en lettres minuscules.
-            name_produit_update = form_update.nom_produit_update_wtf.data
-            stock_produit_update = form_update.stock_actuel_update_wtf.data
-            prix_produit_update = form_update.prix_produit_update_wtf.data
-            categorie_produit_update = form_update.categorie_produit_update_wtf.data
+    if request.method == "POST" and form_update.validate_on_submit():
 
-            valeur_update_dictionnaire = {"value_id_produit": id_produit_update,
-                                          "value_name_produit": name_produit_update,
-                                          "value_stock_actuel":stock_produit_update,
-                                          "value_prix_produit": prix_produit_update,
-                                          "value_categorie_produit": categorie_produit_update
-                                          }
-            print("valeur_update_dictionnaire ", valeur_update_dictionnaire)
+        id_produit_update = form_update.id_produit_update_wtf.data
+        valeur_update_dictionnaire = {
+            "value_id_produit": id_produit_update,
+            "value_nom_produit": form_update.nom_produit_update_wtf.data,
+            "value_categorie_produit": form_update.categorie_produit_update_wtf.data,
+            "value_stock_actuel": form_update.stock_actuel_update_wtf.data,
+            "value_prix_produit": form_update.prix_produit_update_wtf.data
+        }
+        str_sql_update_produit = """
+            UPDATE t_produit SET nom_produit = %(value_nom_produit)s,
+                                 categorie_produit = %(value_categorie_produit)s,
+                                 stock_actuel = %(value_stock_actuel)s,
+                                 prix_produit = %(value_prix_produit)s
+            WHERE id_produit = %(value_id_produit)s
+        """
+        with DBconnection() as mconn_bd:
+            mconn_bd.execute(str_sql_update_produit, valeur_update_dictionnaire)
+        flash("Produit modifié avec succès", "success")
+        return redirect(url_for('genres_afficher', order_by="ASC", id_genre_sel=0))
 
-            str_sql_update_intitulegenre = """ UPDATE t_produit
-                                            SET nom_produit = %(value_nom_produit)s,
-                                                stock_actuel = %(value_stock_actuel)s,
-                                                prix_produit = %(value_prix_produit)s,
-                                                categorie_produit = %(value_categorie_produit)s
-                                        WHERE id_produit = %(value_id_produit)s"""
-            with DBconnection() as mconn_bd:
-                mconn_bd.execute(str_sql_update_intitulegenre, valeur_update_dictionnaire)
-
-            flash(f"Donnée mise à jour !!", "success")
-            print(f"Donnée mise à jour !!")
-
-            # afficher et constater que la donnée est mise à jour.
-            # Affiche seulement la valeur modifiée, "ASC" et l'"id_produit_update"
-            return redirect(url_for('genres_afficher', order_by="ASC", id_genre_sel=id_produit_update))
-        elif request.method == "GET":
-            # Opération sur la BD pour récupérer "id_genre" et "intitule_genre" de la "t_genre"
-            str_sql_id_produit = "SELECT * FROM t_produit " \
-                               "WHERE id_produit = %(value_id_produit)s"
-            valeur_select_dictionnaire = {"value_id_genre": id_produit_update}
-            with DBconnection() as mybd_conn:
-                mybd_conn.execute(str_sql_id_produit, valeur_select_dictionnaire)
-            # Une seule valeur est suffisante "fetchone()", vu qu'il n'y a qu'un seul champ "nom genre" pour l'UPDATE
+    elif request.method == "POST":
+        # Affichage du formulaire pré-rempli
+        id_produit_update = request.values['id_produit_btn_edit_html']
+        str_sql_id_produit = "SELECT * FROM t_produit WHERE id_produit = %(value_id_produit)s"
+        valeur_select_dictionnaire = {"value_id_produit": id_produit_update}
+        with DBconnection() as mybd_conn:
+            mybd_conn.execute(str_sql_id_produit, valeur_select_dictionnaire)
             data_nom_produit = mybd_conn.fetchone()
-            print("data_nom_produit ", data_nom_produit, " type ", type(data_nom_produit), " genre ",
-                  data_nom_produit["intitule_genre"])
+            if data_nom_produit is None:
+                flash("Le produit demandé n'existe pas.", "danger")
+                return redirect(url_for('genres_afficher', order_by="ASC", id_genre_sel=0))
+            # Remplir les champs du formulaire
 
-            # Afficher la valeur sélectionnée dans les champs du formulaire "genre_update_wtf.html"
-            form_update.nom_produit_update_wtf.data = data_nom_produit["intitule_genre"]
-            form_update.prix_produit_update_wtf.data = data_nom_produit["prix"]
-            form_update.stock_actuel_update_wtf.data = data_nom_produit["stock"]
-            form_update.categorie_produit_update_wtf.data = data_nom_produit["categorie"]
-           
-
-
-    except Exception as Exception_genre_update_wtf:
-        raise ExceptionGenreUpdateWtf(f"fichier : {Path(__file__).name}  ;  "
-                                      f"{genre_update_wtf.__name__} ; "
-                                      f"{Exception_genre_update_wtf}")
+            form_update.nom_produit_update_wtf.data = data_nom_produit["nom_produit"]
+            form_update.categorie_produit_update_wtf.data = data_nom_produit["categorie_produit"]
+            form_update.stock_actuel_update_wtf.data = data_nom_produit["stock_actuel"]
+            form_update.prix_produit_update_wtf.data = data_nom_produit["prix_produit"]
+            form_update.id_produit_update_wtf.data = id_produit_update
 
     return render_template("genres/genre_update_wtf.html", form_update=form_update)
 
@@ -232,10 +220,9 @@ def genre_update_wtf():
 def genre_delete_wtf():
     data_films_attribue_genre_delete = None
     btn_submit_del = None
-    # L'utilisateur vient de cliquer sur le bouton "DELETE". Récupère la valeur de "id_genre"
-    id_genre_delete = request.values['id_produit_btn_delete_html']
+    # Récupère la valeur de "id_produit" envoyée par le bouton Delete
+    id_genre_delete = request.values.get('id_produit_btn_delete_html') or request.args.get('id_produit_btn_delete_html')
 
-    # Objet formulaire pour effacer le genre sélectionné.
     form_delete = FormWTFDeleteGenre()
     try:
         print(" on submit ", form_delete.validate_on_submit())
@@ -245,39 +232,29 @@ def genre_delete_wtf():
                 return redirect(url_for("genres_afficher", order_by="ASC", id_genre_sel=0))
 
             if form_delete.submit_btn_conf_del.data:
-                # Récupère les données afin d'afficher à nouveau
-                # le formulaire "genres/genre_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
-                data_films_attribue_genre_delete = session['data_films_attribue_genre_delete']
+                data_films_attribue_genre_delete = session.get('data_films_attribue_genre_delete')
                 print("data_films_attribue_genre_delete ", data_films_attribue_genre_delete)
-
                 flash(f"Effacer le genre de façon définitive de la BD !!!", "danger")
-                # L'utilisateur vient de cliquer sur le bouton de confirmation pour effacer...
-                # On affiche le bouton "Effacer genre" qui va irrémédiablement EFFACER le genre
                 btn_submit_del = True
 
             if form_delete.submit_btn_del.data:
-                valeur_delete_dictionnaire = {"value_id_genre": id_genre_delete}
+                valeur_delete_dictionnaire = {"value_id_produit": id_genre_delete}
                 print("valeur_delete_dictionnaire ", valeur_delete_dictionnaire)
 
-                str_sql_delete_films_genre = """DELETE FROM t_fournisseur_produit WHERE fk_fournisseur = %(value_id_produit)s"""
+                str_sql_delete_films_genre = """DELETE FROM t_fournisseur_produit WHERE fk_produit = %(value_id_produit)s"""
                 str_sql_delete_idgenre = """DELETE FROM t_produit WHERE id_produit = %(value_id_produit)s"""
-                # Manière brutale d'effacer d'abord la "fk_genre", même si elle n'existe pas dans la "t_genre_film"
-                # Ensuite on peut effacer le genre vu qu'il n'est plus "lié" (INNODB) dans la "t_genre_film"
                 with DBconnection() as mconn_bd:
                     mconn_bd.execute(str_sql_delete_films_genre, valeur_delete_dictionnaire)
                     mconn_bd.execute(str_sql_delete_idgenre, valeur_delete_dictionnaire)
 
                 flash(f"Genre définitivement effacé !!", "success")
                 print(f"Genre définitivement effacé !!")
-
-                # afficher les données
                 return redirect(url_for('genres_afficher', order_by="ASC", id_genre_sel=0))
 
         if request.method == "GET":
-            valeur_select_dictionnaire = {"value_id_genre": id_genre_delete}
+            valeur_select_dictionnaire = {"value_id_produit": id_genre_delete}
             print(id_genre_delete, type(id_genre_delete))
 
-            # Requête qui affiche tous les films_genres qui ont le genre que l'utilisateur veut effacer
             str_sql_genres_films_delete = """SELECT *
                         FROM t_fournisseur_produit
                         INNER JOIN t_fournisseur ON t_fournisseur_produit.fk_fournisseur = t_fournisseur.id_fournisseur
@@ -289,25 +266,18 @@ def genre_delete_wtf():
                 mydb_conn.execute(str_sql_genres_films_delete, valeur_select_dictionnaire)
                 data_films_attribue_genre_delete = mydb_conn.fetchall()
                 print("data_films_attribue_genre_delete...", data_films_attribue_genre_delete)
-
-                # Nécessaire pour mémoriser les données afin d'afficher à nouveau
-                # le formulaire "genres/genre_delete_wtf.html" lorsque le bouton "Etes-vous sur d'effacer ?" est cliqué.
                 session['data_films_attribue_genre_delete'] = data_films_attribue_genre_delete
 
-                # Opération sur la BD pour récupérer "id_genre" et "intitule_genre" de la "t_genre"
                 str_sql_id_produit = "SELECT * FROM t_produit WHERE id_produit = %(value_id_produit)s"
-
                 mydb_conn.execute(str_sql_id_produit, valeur_select_dictionnaire)
-                # Une seule valeur est suffisante "fetchone()",
-                # vu qu'il n'y a qu'un seul champ "nom genre" pour l'action DELETE
                 data_nom_produit = mydb_conn.fetchone()
+                if data_nom_produit is None:
+                    flash("Le produit demandé n'existe pas.", "danger")
+                    return redirect(url_for('genres_afficher', order_by="ASC", id_genre_sel=0))
                 print("data_nom_produit ", data_nom_produit, " type ", type(data_nom_produit), " genre ",
-                      data_nom_produit["intitule_genre"])
+                      data_nom_produit["nom_produit"])
 
-            # Afficher la valeur sélectionnée dans le champ du formulaire "genre_delete_wtf.html"
-            form_delete.nom_genre_delete_wtf.data = data_nom_produit["intitule_genre"]
-
-            # Le bouton pour l'action "DELETE" dans le form. "genre_delete_wtf.html" est caché.
+            form_delete.nom_genre_delete_wtf.data = data_nom_produit["nom_produit"]
             btn_submit_del = False
 
     except Exception as Exception_genre_delete_wtf:
