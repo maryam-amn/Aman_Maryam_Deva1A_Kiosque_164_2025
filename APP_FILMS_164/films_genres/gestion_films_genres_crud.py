@@ -33,14 +33,14 @@ def films_genres_afficher(id_film_sel):
         try:
             with DBconnection() as mc_afficher:
                 strsql_genres_films_afficher_data = """ SELECT 
-        t_fournisseur.id_fournisseur, 
-        t_fournisseur.nom_entreprise, 
-        t_fournisseur.adresse_entreprise,
-        GROUP_CONCAT(t_produit.nom_produit SEPARATOR ', ') AS produits_fournis
-    FROM t_fournisseur
-    LEFT JOIN t_fournisseur_produit ON t_fournisseur.id_fournisseur = t_fournisseur_produit.fk_fournisseur
-    LEFT JOIN t_produit ON t_produit.id_produit = t_fournisseur_produit.fk_produit
-    GROUP BY t_fournisseur.id_fournisseur"""
+                t_fournisseur.id_fournisseur, 
+                t_fournisseur.nom_entreprise, 
+                t_fournisseur.adresse_entreprise,
+                GROUP_CONCAT(t_produit.nom_produit SEPARATOR ', ') AS produits_fournis
+            FROM t_fournisseur
+            LEFT JOIN t_fournisseur_produit ON t_fournisseur.id_fournisseur = t_fournisseur_produit.fk_fournisseur
+            LEFT JOIN t_produit ON t_produit.id_produit = t_fournisseur_produit.fk_produit
+            GROUP BY t_fournisseur.id_fournisseur"""
                 if id_film_sel == 0:
                     # le paramètre 0 permet d'afficher tous les films
                     # Sinon le paramètre représente la valeur de l'id du film

@@ -5,9 +5,11 @@
 """
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField
-from wtforms import SubmitField, HiddenField
+from wtforms import SubmitField, HiddenField, SelectField
+from wtforms import DecimalField, IntegerField
 from wtforms.validators import Length, InputRequired, DataRequired
-from wtforms.validators import Regexp
+from wtforms.validators import Regexp, NumberRange
+from wtforms import SelectMultipleField
 
 
 class FormWTFAjouterGenres(FlaskForm):
@@ -15,7 +17,6 @@ class FormWTFAjouterGenres(FlaskForm):
         Formulaire pour ajouter un produit (genre)
     """
     nom_produit_ajouter_regexp = r'^[A-Za-zÀ-ÿ\s\'-]+$'
-    categorie_produit_ajouter_regexp = r'^[A-Za-zÀ-ÿ\s\'-]+$'
     stock_actuel_ajouter_regexp = r'^\d+$'
     prix_produit_ajouter_regexp = r'^\d+([.,]\d{1,2})?$'
 
@@ -29,35 +30,25 @@ class FormWTFAjouterGenres(FlaskForm):
             )
         ]
     )
-    categorie_produit_ajouter_wtf = StringField(
-        "Catégorie du produit",
-        validators=[
-            Length(min=2, max=20, message="min 2 max 20"),
-            Regexp(
-                categorie_produit_ajouter_regexp,
-                message="Pas de chiffres, de caractères spéciaux, d'espace à double, de double apostrophe, de double trait union"
-            )
-        ]
-    )
-    stock_actuel_ajouter_wtf = StringField(
+    stock_actuel_ajouter_wtf = IntegerField(
         "Stock actuel",
         validators=[
-            Length(min=1, max=20, message="min 1 max 20"),
-            Regexp(
-                stock_actuel_ajouter_regexp,
-                message="Le stock doit être un nombre entier"
-            )
+            DataRequired(message="Le stock doit être un nombre entier"),
+            NumberRange(min=0, message="Le stock ne peut pas être négatif")
         ]
     )
-    prix_produit_ajouter_wtf = StringField(
+    prix_produit_ajouter_wtf = DecimalField(
         "Prix du produit",
+        places=2,
+        rounding=None,
         validators=[
-            Length(min=1, max=20, message="min 1 max 20"),
-            Regexp(
-                prix_produit_ajouter_regexp,
-                message="Le prix doit être un nombre (ex: 10 ou 10.99)"
-            )
+            DataRequired(message="Le prix doit être un nombre (ex: 10 ou 10.99)")
         ]
+    )
+    categorie_produit_ajouter_wtf = SelectMultipleField(
+        "Catégories",
+        coerce=int,  # Pour récupérer l'id de la catégorie comme un entier
+        validators=[DataRequired(message="Choisissez au moins une catégorie")]
     )
 
     submit = SubmitField("Ajouter produit")
@@ -73,7 +64,7 @@ class FormWTFUpdateGenre(FlaskForm):
     nom_produit_update_regexp = r'^[A-Za-zÀ-ÿ\s\'-]+$'
     stock_actuel_update_regexp = r'^\d+$'
     prix_produit_update_regexp = r'^\d+([.,]\d{1,2})?$'
-    categorie_produit_update_regexp = r'^[A-Za-zÀ-ÿ\s\'-]+$'
+
     # Champ nom du produit
     nom_produit_update_wtf = StringField(
         "Ecrire le produit",
@@ -85,37 +76,21 @@ class FormWTFUpdateGenre(FlaskForm):
             )
         ]
     )
-    categorie_produit_update_wtf = StringField(
-        "Ecrire la cathégorie du produit",
-        validators=[
-            Length(min=2, max=20, message="min 2 max 20"),
-            Regexp(
-                categorie_produit_update_regexp,
-                message="Pas de chiffres, de caractères spéciaux, d'espace à double, de double apostrophe, de double trait union"
-            )
-        ]
-    )
+
     # Champ stock actuel
-    stock_actuel_update_wtf = StringField(
+    stock_actuel_update_wtf = IntegerField(
         "Ecrire le stock",
         validators=[
-            Length(min=1, max=20, message="min 1 max 20"),
-            Regexp(
-                stock_actuel_update_regexp,
-                message="Le stock doit être un nombre entier"
-            )
+            DataRequired(message="Le stock doit être un nombre entier")
         ]
     )
 
     # Champ prix du produit
-    prix_produit_update_wtf = StringField(
+    prix_produit_update_wtf = DecimalField(
         "Ecrire le prix",
+        places=2,
         validators=[
-            Length(min=1, max=20, message="min 1 max 20"),
-            Regexp(
-                prix_produit_update_regexp,
-                message="Le prix doit être un nombre (ex: 10 ou 10.99)"
-            )
+            DataRequired(message="Le prix doit être un nombre (ex: 10 ou 10.99)")
         ]
     )
 

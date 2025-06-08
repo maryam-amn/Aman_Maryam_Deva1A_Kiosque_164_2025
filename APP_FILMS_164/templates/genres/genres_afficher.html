@@ -21,9 +21,11 @@
 							Stock actuel
                         </th>
                          <th class="align-middle">
+							Prix
+                        </th>
+  <th class="align-middle">
 							Catégorie
                         </th>
-
 
 
                     </tr>
@@ -44,18 +46,19 @@
 							{{ row.stock_actuel }}
 						</td>
 						<td class="align-middle">
-							{{ row.categorie_produit }}
+							{{ row.prix_produit }}
 						</td>
+						<td>{{ row.nom_categorie or "Catégorie vide" }}</td>
 
 						<td class="text-center" class="align-middle">
 							<a class="btn btn-primary" href="{{ url_for('genres_ajouter_wtf') }}" role="button">Ajouter</a>
 						</td>
-	<td class="text-center align-middle">
-    <form action="{{ url_for('genre_update_wtf') }}" method="post" style="display:inline;">
-        <input type="hidden" name="id_produit_btn_edit_html" value="{{ row.id_produit }}">
-        <button type="submit" class="btn btn-warning">Edit</button>
-    </form>
-</td>
+					<td class="text-center align-middle">
+					<form action="{{ url_for('genre_update_wtf') }}" method="post" style="display:inline;">
+						<input type="hidden" name="id_produit_btn_edit_html" value="{{ row.id_produit }}">
+						<button type="submit" class="btn btn-warning">Edit</button>
+					</form>
+				</td>
 						<td class="text-center" class="align-middle">
 							<a class="btn btn-danger" href="{{ url_for('genre_delete_wtf', id_produit_btn_delete_html=row.id_produit) }}" role="button">Delete</a>
 						</td>
@@ -65,7 +68,7 @@
 				<tbody>
 					<tr>
 						<td>
-							Aucun genre.
+							Aucun produit.
 						</td>
 						<td>
 							<a class="btn btn-primary" href="{{ url_for('genres_ajouter_wtf') }}" role="button">Ajouter</a>

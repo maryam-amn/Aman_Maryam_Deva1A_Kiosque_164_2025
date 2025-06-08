@@ -1,0 +1,63 @@
+<!-- templates/categories_afficher.html -->
+{% extends "base.html" %}
+{% block title %} Catégories {% endblock %}
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<p>
+				Catégories
+			</p>
+			<table class="table table-bordered table-sm">
+				{% if categories %}
+				<thead>
+					<tr>
+						<th class="align-middle">Id</th>
+						<th class="align-middle">
+							Catégorie
+						</th>
+						<th class="align-middle">
+							Petite description
+						</th>
+					</tr>
+				</thead>
+				{% endif %}
+
+				{% for row in categories %}
+				<tbody>
+					<tr>
+						<td class="align-middle">{{ row.id_categorie }}</td>
+						<td class="align-middle">
+							{{row.nom_categorie }}
+						</td>
+						<td class="align-middle">
+							{{row.description }}
+						</td>
+						<td class="text-center" class="align-middle">
+							<a class="btn btn-primary" href="{{ url_for('categories_add') }}" role="button">Ajouter</a>
+						</td>
+						<td class="text-center align-middle">
+							<a class="btn btn-warning" href="{{ url_for('categories_update', id_categorie=row.id_categorie) }}">Modifier</a>
+						</td>
+						<td class="text-center" class="align-middle">
+							<a class="btn btn-danger" href="{{ url_for('categories_delete', id_categorie=row.id_categorie) }}" role="button">Delete</a>
+						</td>
+					</tr>
+				</tbody>
+				{% else %}
+				<tbody>
+					<tr>
+						<td>
+							Aucune catégorie.
+						</td>
+						<td>
+							<a class="btn btn-primary" href="{{ url_for('categories_add') }}" role="button">Ajouter</a>
+						</td>
+					</tr>
+				</tbody>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}

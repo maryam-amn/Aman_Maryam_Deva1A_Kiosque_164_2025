@@ -1,21 +1,25 @@
 {% extends "base.html" %}
-{% block title %} Homepage FILMS {% endblock %}
+{% block title %}Accueil – Fournisseurs & Produits{% endblock %}
 {% block body %}
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12">
-			<h3>
-				Démo complète du 2023.03.25
-			</h3>
-			<h3>
-				CRUD sur 3 tables autour des films et leurs genres associés<br>
-			</h3>
-			<ul>
-				<li class="list-item">
-					Lire le readme.md
-				</li>
-			</ul>
-		</div>
-	</div>
+
+<div class="container-fluid ">
+       <div class="container d-flex align-items-start justify-content-center" style="min-height: 80vh; padding-top: 80px;">
+        <div class="col-md-8 text-center p-4 rounded shadow" style="background-color: transparent;">
+            <h2 class="mb-4" style="color: black; text-shadow:0 0 1px rgba(0, 0, 0, 0.3), 0 0 2px rgba(0, 0, 0, 0.3), 0 0 5px rgba(0, 0, 0, 0.2);">Bienvenue sur l’application de gestion Fournisseurs/Produits</h2>
+            <p class="lead"  style="color: black; text-shadow:0 0 1px rgba(0, 0, 0, 0.3), 0 0 2px rgba(0, 0, 0, 0.3), 0 0 5px rgba(0, 0, 0, 0.2);">
+                Cette application web vous permet de gérer efficacement vos fournisseurs et leurs produits associés.<br>
+                <span style=" font-weight: 500;">
+                    Ajoutez, modifiez, supprimez et associez des produits à vos fournisseurs<br> grâce à une interface moderne et intuitive.
+                </span><br>
+                Utilisez le menu pour naviguer entre les différentes fonctionnalités <br>et optimiser la gestion de votre kiosque.
+            </p>
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item bg-transparent">📄 Consultez le <a href="https://github.com/maryam-amn/Aman_Maryam_Deva1A_Kiosque_164_2025/blob/main/readme.md"><strong>README</strong></a> pour bien démarrer.</li>
+                <li class="list-group-item bg-transparent">🗂️ Utilisez le menu en haut pour accéder à toutes les sections.</li>
+            </ul>
+			<br>	<br>	<br>	<br>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

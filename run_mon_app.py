@@ -14,6 +14,7 @@ from APP_FILMS_164 import DEBUG_FLASK
 from APP_FILMS_164 import ADRESSE_SRV_FLASK
 from APP_FILMS_164 import PORT_FLASK
 from flask_cors import CORS
+from APP_FILMS_164.categorie import categorie_produit
 
 """Pour comprendre à quoi sert CORS... et en cas de curiosité maladive...
 ne PAS cliquer sur le lien ci-dessous, car c'est bien expliqué.

@@ -1998,7 +1998,7 @@ progress {
     --bs-table-color-state: initial;
     --bs-table-bg-state: initial;
     --bs-table-color: #fff;
-    --bs-table-bg: var(--bs-body-bg);
+    /*--bs-table-bg: var(--bs-body-bg);*/
     --bs-table-border-color: var(--bs-border-color);
     --bs-table-accent-bg: transparent;
     --bs-table-striped-color: #fff;
@@ -3957,7 +3957,7 @@ textarea.form-control-lg {
 
 .dropdown-menu-dark {
     --bs-dropdown-color: #dee2e6;
-    --bs-dropdown-bg: #343a40;
+    --bs-dropdown-bg:#7f51a1 ;
     --bs-dropdown-border-color: var(--bs-border-color-translucent);
     --bs-dropdown-box-shadow: ;
     --bs-dropdown-link-color: #dee2e6;
@@ -7907,7 +7907,7 @@ textarea.form-control-lg {
 }
 
 .shadow {
-    box-shadow: var(--bs-box-shadow) !important
+  /*  box-shadow: var(--bs-box-shadow) !important */
 }
 
 .shadow-sm {
@@ -9341,7 +9341,11 @@ textarea.form-control-lg {
 
 .bg-secondary {
     --bs-bg-opacity: 1;
-    background-color: rgba(var(--bs-secondary-rgb), var(--bs-bg-opacity)) !important
+   /* background-color: rgba(var(--bs-secondary-rgb), var(--bs-bg-opacity)) !important;
+   */ background-color: #7f51a1 ;
+    background-color: darkmagenta;
+     background-color: #6f42c1 !important;
+    background-color: #210935 !important;
 }
 
 .bg-success {
@@ -13471,8 +13475,10 @@ textarea.form-control-lg {
 
 body {
     min-height: 100vh;
-    background-image: linear-gradient(#17082e 0, #1a0933 7%, #1a0933 80%, #0c1f4c 100%);
-    text-shadow: 0 0 1px rgba(50, 251, 226, .3), 0 0 2px rgba(50, 251, 226, .3), 0 0 5px rgba(50, 251, 226, .2)
+   text-shadow: 0 0 1px rgba(50, 251, 226, .3), 0 0 2px rgba(50, 251, 226, .3), 0 0 5px rgba(50, 251, 226, .2);
+   
+   background-image: linear-gradient(to bottom,  #2b0c45 0%,  #7f51a1 100%);
+
 }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
@@ -13522,10 +13528,19 @@ body {
 .text-muted {
     text-shadow: 0 0 1px rgba(21, 104, 94, .3), 0 0 2px rgba(21, 104, 94, .3), 0 0 5px rgba(21, 104, 94, .2)
 }
-
 a {
-    text-shadow: 0 0 1px rgba(50, 251, 226, .3), 0 0 2px rgba(50, 251, 226, .3), 0 0 5px rgba(50, 251, 226, .2)
+  color: #e0d0ff; 
+  text-shadow:
+    0 0 1px rgba(160, 100, 255, 0.3),
+    0 0 2px rgba(160, 100, 255, 0.3),
+    0 0 5px rgba(160, 100, 255, 0.2);
 }
+a:hover {
+  transform: scale(1.001);
+  color: #d7c9f9; 
+    
+}
+
 
 .blockquote-footer {
     text-shadow: 0 0 1px rgba(21, 104, 94, .3), 0 0 2px rgba(21, 104, 94, .3), 0 0 5px rgba(21, 104, 94, .2)
@@ -13663,7 +13678,14 @@ hr {
 }
 
 .navbar.bg-secondary {
-    box-shadow: 0 0 2px rgba(234, 57, 184, .9), 0 0 4px rgba(234, 57, 184, .4), 0 0 1rem rgba(234, 57, 184, .3), 0 0 4rem rgba(234, 57, 184, .1)
+    box-shadow: 0 0 2px rgba(234, 57, 184, .9), 0 0 4px rgba(234, 57, 184, .4), 0 0 1rem rgba(234, 57, 184, .3), 0 0 4rem rgba(234, 57, 184, .1);
+box-shadow:
+  0 0 2px rgba(43, 12, 69, 0.9),
+  0 0 4px rgba(43, 12, 69, 0.4),
+  0 0 1rem rgba(43, 12, 69, 0.2),
+  0 0 4rem rgba(43, 12, 69, 0.1);
+
+
 }
 
 .navbar.bg-success {
