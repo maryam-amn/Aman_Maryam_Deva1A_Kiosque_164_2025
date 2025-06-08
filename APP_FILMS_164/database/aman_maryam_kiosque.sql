@@ -20,6 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `aman_maryam_kiosque`
 --
+DROP DATABASE IF EXISTS `aman_maryam_kiosque`;
 CREATE DATABASE IF NOT EXISTS `aman_maryam_kiosque` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `aman_maryam_kiosque`;
 

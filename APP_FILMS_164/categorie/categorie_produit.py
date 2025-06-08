@@ -100,62 +100,59 @@ def categories_update(id_categorie):
 @app.route("/categories_delete/<int:id_categorie>", methods=['GET', 'POST'])
 def categories_delete(id_categorie):
     from APP_FILMS_164.categorie.categorie_produit_wtf_forms import FormWTFDeleteCategorie
-    form = FormWTFDeleteCategorie()
-    btn_submit_del = False
+    form_delete = FormWTFDeleteCategorie()
     data_produits_associes = None
+    btn_submit_del = False
 
     try:
-        if request.method == "POST":
-            if form.submit_btn_annuler.data:
+        if request.method == "POST" and form_delete.validate_on_submit():
+
+            if form_delete.submit_btn_annuler.data:
                 return redirect(url_for("categories_afficher"))
 
-            if form.submit_btn_conf_del.data:
-                # Affiche la liste des produits associés avant suppression définitive
-                str_sql_produits_associes = """
-                    SELECT DISTINCT p.id_produit, p.nom_produit, p.stock_actuel, p.prix_produit
-                    FROM t_produit_catégorie pc
-                    INNER JOIN t_produit p ON pc.fk_produit = p.id_produit
-                    WHERE pc.fk_categorie = %(value_id_categorie)s
-                """
-                with DBconnection() as conn:
-                    conn.execute(str_sql_produits_associes, {"value_id_categorie": id_categorie})
-                    data_produits_associes = conn.fetchall()
-                session['data_produits_associes'] = data_produits_associes
+            if form_delete.submit_btn_conf_del.data:
+                # On récupère les produits associés depuis la session
+                data_produits_associes = session.get('data_produits_associes')
+                flash("Effacer la catégorie de façon définitive de la BD !!!", "danger")
                 btn_submit_del = True
 
-            if form.submit_btn_del.data:
-                # Suppression des associations puis de la catégorie
-                with DBconnection() as conn:
-                    conn.execute("DELETE FROM t_produit_catégorie WHERE fk_categorie = %(value_id_categorie)s", {"value_id_categorie": id_categorie})
-                    conn.execute("DELETE FROM t_categorie WHERE id_categorie = %(value_id_categorie)s", {"value_id_categorie": id_categorie})
-                flash("Catégorie supprimée avec succès !", "success")
+            if form_delete.submit_btn_del.data:
+                valeur_delete_dictionnaire = {"value_id_categorie": id_categorie}
+
+                # 1. Supprimer les associations dans t_produit_catégorie
+                str_sql_delete_assoc = """DELETE FROM t_produit_catégorie WHERE fk_categorie = %(value_id_categorie)s"""
+                # 2. Supprimer la catégorie
+                str_sql_delete_categorie = """DELETE FROM t_categorie WHERE id_categorie = %(value_id_categorie)s"""
+                with DBconnection() as mconn_bd:
+                    mconn_bd.execute(str_sql_delete_assoc, valeur_delete_dictionnaire)
+                    mconn_bd.execute(str_sql_delete_categorie, valeur_delete_dictionnaire)
+
+                flash("Catégorie définitivement effacée !!", "success")
                 return redirect(url_for('categories_afficher'))
 
-        if request.method == "GET" or not btn_submit_del:
-            # Pré-remplir le champ de la catégorie
-            with DBconnection() as conn:
-                conn.execute("SELECT * FROM t_categorie WHERE id_categorie = %s", (id_categorie,))
-                categorie = conn.fetchone()
-                if categorie:
-                    form.categorie_delete_wtf.data = categorie["nom_categorie"]
-                else:
-                    flash("Catégorie introuvable.", "danger")
-                    return redirect(url_for('categories_afficher'))
+        if request.method == "GET":
+            valeur_select_dictionnaire = {"value_id_categorie": id_categorie}
 
-            # Afficher les produits associés dès le départ (optionnel)
+            # Récupérer les produits associés à la catégorie
             str_sql_produits_associes = """
                 SELECT DISTINCT p.id_produit, p.nom_produit, p.stock_actuel, p.prix_produit
                 FROM t_produit_catégorie pc
                 INNER JOIN t_produit p ON pc.fk_produit = p.id_produit
                 WHERE pc.fk_categorie = %(value_id_categorie)s
             """
-            with DBconnection() as conn:
-                conn.execute(str_sql_produits_associes, {"value_id_categorie": id_categorie})
-                data_produits_associes = conn.fetchall()
+            with DBconnection() as mydb_conn:
+                mydb_conn.execute(str_sql_produits_associes, valeur_select_dictionnaire)
+                data_produits_associes = mydb_conn.fetchall()
+                session['data_produits_associes'] = data_produits_associes
 
-        # Si on est en mode confirmation (après avoir cliqué sur "Confirmer"), on récupère les produits associés depuis la session
-        if btn_submit_del:
-            data_produits_associes = session.get('data_produits_associes')
+                str_sql_id_categorie = "SELECT * FROM t_categorie WHERE id_categorie = %(value_id_categorie)s"
+                mydb_conn.execute(str_sql_id_categorie, valeur_select_dictionnaire)
+                data_nom_categorie = mydb_conn.fetchone()
+                if data_nom_categorie is None:
+                    flash("La catégorie demandée n'existe pas.", "danger")
+                    return redirect(url_for('categories_afficher'))
+                form_delete.categorie_delete_wtf.data = data_nom_categorie["nom_categorie"]
+            btn_submit_del = False
 
     except Exception as e:
         flash(f"Erreur lors de la suppression : {e}", "danger")
@@ -163,7 +160,8 @@ def categories_delete(id_categorie):
 
     return render_template(
         "categorie/categories_delete.html",
-        form=form,
+        form=form_delete,
         btn_submit_del=btn_submit_del,
         data_produits_associes=data_produits_associes
     )
+

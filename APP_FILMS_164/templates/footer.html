@@ -1,10 +1,43 @@
-<footer class="mt-auto py-2">
+<footer class="mt-auto py-2 text-white">
   <div class="container-fluid">
-      <hr class="py-0 bg-light" />
-        <div class="row">
-            <div class="col-md-6">Initiation construite pour être multipliée.<span class="small"><br><a href="https://vogonselectriques.net" target="_blank">OM de l'autre côté du Module 164.</a></span></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3 text-right small align-self-end">2024.03.17</div>
-        </div>
+    <hr class="py-0 bg-light" />
+    <div class="row align-items-center">
+      <!-- Bloc gauche -->
+      <div class="col-md-6 d-flex align-items-center text-white">
+        Initiation construite pour être multipliée.
+        <span class="small ms-2">
+          <a href="https://vogonselectriques.net" target="_blank" class="text-white">
+            OM de l'autre côté du Module 164.
+          </a>
+        </span>
+      </div>
+      <!-- Navigation au centre, horizontale -->
+      <div class="col-md-4">
+        <ul class="nav justify-content-center">
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{{ url_for('personnes_taille_dict') }}">Démo "TAILLE"</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{{ url_for('route_hommage_a_u_x_V_ictim_es_du_monstre_du_mod_1_6_4') }}">Route "essai"</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Autres démos
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+              <li><a class="dropdown-item text-white" href="{{ url_for('index') }}">Démo index (sans template)</a></li>
+              <li><a class="dropdown-item text-white" href="404.html">404</a></li>
+              <li><a class="dropdown-item text-white" href="{{ url_for('mon_premier_wtform') }}">Essai form</a></li>
+              <li><a class="dropdown-item text-white" href="{{ url_for('demo_select_wtf') }}">Essai DROPDOWN</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- Date à droite -->
+      <div class="col-md-2 text-end small text-white">
+        2025.06.08 &copy; <a href="https://github.com/maryam-amn/Aman_Maryam_Deva1A_Kiosque_164_2025">Aman_Maryam_Deva1A_Kiosque_164_2025</a>"
+        
+      </div>
+    </div>
   </div>
 </footer>

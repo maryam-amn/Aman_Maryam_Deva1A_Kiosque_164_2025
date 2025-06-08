@@ -35,13 +35,17 @@ def genres_afficher(order_by, id_genre_sel):
             with DBconnection() as mc_afficher:
                 if order_by == "ASC" and id_genre_sel == 0:
                     strsql_genres_afficher = """
-                        SELECT p.id_produit, p.nom_produit, p.stock_actuel, p.prix_produit,
-                               GROUP_CONCAT(DISTINCT c.nom_categorie SEPARATOR ', ') AS nom_categorie
-                        FROM t_produit p
-                        LEFT JOIN t_produit_catégorie pc ON p.id_produit = pc.fk_produit
-                        LEFT JOIN t_categorie c ON pc.fk_categorie = c.id_categorie
-                        GROUP BY p.id_produit
-                        ORDER BY p.id_produit ASC
+                        SELECT p.id_produit, 
+       p.nom_produit, 
+       p.stock_actuel, 
+       CONCAT(p.prix_produit, '.-') AS prix_produit,
+       GROUP_CONCAT(DISTINCT c.nom_categorie SEPARATOR ', ') AS nom_categorie
+FROM t_produit p
+LEFT JOIN t_produit_catégorie pc ON p.id_produit = pc.fk_produit
+LEFT JOIN t_categorie c ON pc.fk_categorie = c.id_categorie
+GROUP BY p.id_produit
+ORDER BY p.id_produit ASC
+
                     """
                     mc_afficher.execute(strsql_genres_afficher)
                 elif order_by == "ASC":
